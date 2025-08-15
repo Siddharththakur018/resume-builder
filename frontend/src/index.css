@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+:root {
+  --home-bg-color: #d1def7;
+  --home-buton-color: #453db1;
+}
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 37%,
+    #e5e7eb 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}

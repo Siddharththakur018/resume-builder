@@ -1,0 +1,94 @@
+# ------------------------
+# Logs
+# ------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------
+# Dependency directories
+# ------------------------
+node_modules/
+
+# ------------------------
+# Build outputs
+# ------------------------
+dist/
+dist-ssr/
+*.local
+
+# ------------------------
+# Editor directories and files
+# ------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ------------------------
+# OS generated files
+# ------------------------
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+.AppleDB
+.AppleDesktop
+.apdisk
+
+# Linux
+*~
+.nfs*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# ------------------------
+# Environment & Secrets
+# ------------------------
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# ------------------------
+# Package manager caches
+# ------------------------
+.npm
+.yarn/cache
+.pnpm-store
+
+# ------------------------
+# Coverage
+# ------------------------
+coverage/
+*.lcov
+
+# ------------------------
+# Miscellaneous
+# ------------------------
+.tmp
+.temp
+.cache
