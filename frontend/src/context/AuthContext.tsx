@@ -1,5 +1,4 @@
-// src/contexts/AuthContext.tsx
-import  { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { 
   getAuth, 
@@ -62,7 +61,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setCurrentUser(user);
       setLoading(false);
     });
-
     return unsubscribe;
   }, [auth]);
 

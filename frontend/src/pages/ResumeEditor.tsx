@@ -6,41 +6,16 @@ import WorkExperience from "../components/WorkExperience";
 import Education from "../components/Education";
 import Skills from "../components/Skills";
 import Summary from "../components/Summary";
+import ResumePreview from "../components/ResumePreview";
 
 // -----------------
 // Type Definitions
 // -----------------
-type GeneralInfoType = {
-  name?: string;
-  email?: string;
-  phone?: string;
-};
-
-type PersonalInfoType = {
-  address?: string;
-  linkedin?: string;
-  github?: string;
-};
-
-type WorkExperienceType = {
-  company: string;
-  role: string;
-  startDate: string;
-  endDate?: string;
-};
-
-type EducationType = {
-  school: string;
-  degree: string;
-  startDate: string;
-  endDate?: string;
-};
-
 type ResumeData = {
-  generalInfo: GeneralInfoType;
-  personalInfo: PersonalInfoType;
-  workExperience: WorkExperienceType[];
-  education: EducationType[];
+  generalInfo: Record<string, any>;
+  personalInfo: Record<string, any>;
+  workExperience: any[];
+  education: any[];
   skills: string[];
   summary: string;
 };
@@ -64,10 +39,11 @@ function ResumeEditor() {
     summary: "",
   });
 
+  // Steps array holds component references only (not JSX)
   const steps = [
-    { name: "General Info", component: GeneralInfo },
-    { name: "Personal Info", component: PersonalInfo },
-    { name: "Work Experience", component: WorkExperience },
+    { name: "General info", component: GeneralInfo },
+    { name: "Personal info", component: PersonalInfo },
+    { name: "Work experience", component: WorkExperience },
     { name: "Education", component: Education },
     { name: "Skills", component: Skills },
     { name: "Summary", component: Summary },
@@ -82,39 +58,42 @@ function ResumeEditor() {
     "summary",
   ] as const;
 
+  // Render the component for the current step and pass data/setData props dynamically
   const renderStepContent = () => {
-  const ActiveComponent = steps[activeStep].component as React.FC<StepProps<any>>;
-  const currentKey = stepKeyMap[activeStep];
+    const ActiveComponent =
+      steps[activeStep].component as React.FC<StepProps<any>>;
+    const currentKey = stepKeyMap[activeStep];
+
+    return (
+      <ActiveComponent
+        data={resumeData[currentKey]}
+        setData={(newData: any) =>
+          setResumeData((prev) => ({
+            ...prev,
+            [currentKey]: newData,
+          }))
+        }
+      />
+    );
+  };
+
+  const prevStep = () => {
+    setActiveStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  const nextStep = () => {
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+  };
 
   return (
-    <ActiveComponent
-      data={resumeData[currentKey]}
-      setData={(newData: any) =>
-        setResumeData((prev) => ({
-          ...prev,
-          [currentKey]: newData,
-        }))
-      }
-    />
-  );
-};
-
-  return (
-    <div className="w-[1200px] mx-auto">
-      <h2 className="font-bold text-center text-xl mt-10">
-        Design your resume
-      </h2>
-      <h3 className="text-gray-500 text-center">
-        Follow the steps below to create your resume. Your progress will be
-        saved automatically.
-      </h3>
-
-      <div className="border-2 mt-10 h-screen">
+    <div className="max-w-[1200px] mx-auto">
+      {/* Main Container */}
+      <div className="mt-10 mb-4 h-[calc(100vh-200px)] border rounded-lg shadow-sm overflow-hidden">
         <div className="flex h-full">
-          {/* Left Side - Navigation */}
-          <div className="w-1/2 border-r">
-            {/* Breadcrumb Navigation */}
-            <div className="p-4 border-b">
+          {/* Left Side - Form Section */}
+          <div className="w-1/2 flex flex-col border-r">
+            {/* Breadcrumbs */}
+            <div className="p-4 bg-white">
               <div className="flex items-center text-sm whitespace-nowrap overflow-x-auto">
                 {steps.map((step, index) => (
                   <React.Fragment key={index}>
@@ -122,36 +101,68 @@ function ResumeEditor() {
                       onClick={() => setActiveStep(index)}
                       className={`${
                         index === activeStep
-                          ? "text-black font-medium"
-                          : "text-gray-400 hover:text-gray-600"
+                          ? "text-black font-medium cursor-pointer"
+                          : "text-gray-400 hover:text-gray-600 cursor-pointer"
                       }`}
                     >
                       {step.name}
                     </button>
                     {index < steps.length - 1 && (
-                      <IoIosArrowForward className="w-4 h-4 text-gray-500 mx-2" />
+                      <IoIosArrowForward className="w-4 h-4 text-gray-400 mx-2" />
                     )}
                   </React.Fragment>
                 ))}
               </div>
             </div>
 
-            {/* Step Content */}
-            <div>{renderStepContent()}</div>
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-6 bg-white">
+              {renderStepContent()}
+            </div>
           </div>
 
-          {/* Right Side - Help and Preview */}
-          <div className="w-1/2 relative">
+          {/* Right Side - Resume Preview */}
+          <div className="w-1/2 flex flex-col relative">
+            {/* Help icon */}
             <div className="absolute top-4 right-4">
               <IoIosHelpCircleOutline className="w-5 h-5 text-gray-400" />
             </div>
 
-            <div className="p-8 pt-16">
+            {/* Preview */}
+            <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
               <div className="text-center text-gray-400">
-                Resume preview will appear here
+                <ResumePreview resumeData={resumeData} />
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-around ">
+        <div className="w-52 flex justify-around">
+          <button
+            onClick={prevStep}
+            className={`text-lg p-2 w-20 rounded-md ${
+              activeStep === 0
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-black text-white cursor-pointer"
+            }`}
+          >
+            Prev
+          </button>
+          <button
+            onClick={nextStep}
+            className={`text-lg p-2 w-20 rounded-md ${
+              activeStep === steps.length - 1
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-black text-white cursor-pointer"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+        <div>
+          <button className="text-lg">Close</button>
         </div>
       </div>
     </div>
