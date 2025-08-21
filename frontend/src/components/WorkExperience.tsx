@@ -15,6 +15,7 @@ type WorkExperienceProps = {
 
 function WorkExperience({ data, setData }: WorkExperienceProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleChange = (index: number, field: string, value: string) => {
     const updatedExperiences = [...data];
@@ -39,7 +40,11 @@ function WorkExperience({ data, setData }: WorkExperienceProps) {
       <div>
         <h2 className="text-center font-bold  text-xl">Work Experience</h2>
         <h3 className="text-center text-gray-400">Add as many work experiences as you like</h3>
-        <AiModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <AiModal type="summary" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}   onGenerate={(text) => {
+            if (activeIndex !== null) {
+              handleChange(activeIndex, "description", text);
+            }
+          }} />
         {data.map((experience, index) => (
           <div key={index} className="w-[500px] mx-auto mt-5">
             <div className="border-1 border-gray-300 rounded-md p-4">
@@ -47,7 +52,11 @@ function WorkExperience({ data, setData }: WorkExperienceProps) {
 
               <div className="flex justify-center items-center mt-4">
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => {
+                    setIsModalOpen(true) 
+                    setActiveIndex(index)
+                  }}
+                  
                   className="flex items-center gap-1 border border-gray-300 p-2 cursor-pointer rounded-md"
                 >
                   <FaWandMagicSparkles /> Smart Fill (Ai)

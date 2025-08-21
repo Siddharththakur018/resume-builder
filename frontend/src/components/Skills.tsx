@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 type SkillsProps = {
   data: string[];
@@ -8,15 +8,11 @@ type SkillsProps = {
 function Skills({ data, setData }: SkillsProps) {
   const [input, setInput] = useState("")
 
-  // Keep input in sync with parent `data`
-  useEffect(() => {
-    setInput(data.join(", "))
-  }, [data])
-
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
     setInput(value)
 
+    // Split on commas, trim spaces, and remove empty items
     const separatedSkills = value
       .split(",")
       .map((skill) => skill.trim())
@@ -41,6 +37,8 @@ function Skills({ data, setData }: SkillsProps) {
           Separate each skill with comma
         </p>
       </div>
+
+     
     </div>
   )
 }

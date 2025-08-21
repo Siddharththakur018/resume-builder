@@ -1,5 +1,6 @@
 import { LuDot } from "react-icons/lu"
 
+
 type WorkExperience = {
     jobTitle?: string
     company?: string
@@ -30,11 +31,13 @@ type PersonalInfo = {
     email?: string
 }
 
+
 type ResumeData = {
     personalInfo?: PersonalInfo
     workExperience?: WorkExperience[]
     education?: Education[]
     skills?: (Skill | string)[]
+    summary?: string
 }
 
 type ResumeProps = {
@@ -72,6 +75,10 @@ function ResumePreview({ resumeData }: ResumeProps) {
     const hasSkills = skills.some((sk: Skill | string) =>
         typeof sk === "string" ? sk.trim() : sk.skill?.trim()
     )
+
+    const summary = resumeData.summary || ""
+    const hasSummary = summary.trim().length > 0
+
 
     return (
         <div className="bg-white h-screen border border-gray-300 rounded-md p-4">
@@ -112,6 +119,14 @@ function ResumePreview({ resumeData }: ResumeProps) {
                 </div>
             </div>
 
+            {hasSummary && (
+                <div className="mt-6 border-t-2 text-left">
+                    <h2 className="font-bold text-lg mt-3  text-black">Professional Summary</h2>
+                    <p className="mt-2 text-black">{summary}</p>
+                </div>
+            )}
+
+
             {/* ✅ Work Experience */}
             {hasWorkExperience && (
                 <div className="mt-6 border-t-2">
@@ -129,7 +144,7 @@ function ResumePreview({ resumeData }: ResumeProps) {
                         return (
                             <div key={idx} className="mb-4 text-left">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="font-semibold text-lg text-black">{exp.jobTitle}</h3>
+                                    <h3 className="font-semibold text-md text-black">{exp.jobTitle} at {exp.company}</h3>
                                     <p className="text-sm text-black">
                                         {exp.startDate
                                             ? `${exp.startDate} ${exp.endDate ? `- ${exp.endDate}` : "- Present"}`
@@ -137,8 +152,13 @@ function ResumePreview({ resumeData }: ResumeProps) {
                                     </p>
                                 </div>
 
-                                <p className="text-sm text-black">{exp.company}</p>
-                                {exp.description && <p className="text-sm">{exp.description}</p>}
+                                {exp.description && (
+                                    <ul className="list-disc ml-5 text-sm">
+                                        {exp.description.split("\n").map((line, i) => (
+                                            <li key={i}>{line.replace(/^- /, "")}</li>
+                                        ))}
+                                    </ul>
+                                )}
                             </div>
                         )
                     })}

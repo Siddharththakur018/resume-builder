@@ -7,10 +7,9 @@ import Education from "../components/Education";
 import Skills from "../components/Skills";
 import Summary from "../components/Summary";
 import ResumePreview from "../components/ResumePreview";
+import { useNavigate } from "react-router-dom";
 
-// -----------------
-// Type Definitions
-// -----------------
+
 type ResumeData = {
   generalInfo: Record<string, any>;
   personalInfo: Record<string, any>;
@@ -25,9 +24,7 @@ type StepProps<T> = {
   setData: (data: T) => void;
 };
 
-// -----------------
-// Component
-// -----------------
+
 function ResumeEditor() {
   const [activeStep, setActiveStep] = useState(0);
   const [resumeData, setResumeData] = useState<ResumeData>({
@@ -38,8 +35,8 @@ function ResumeEditor() {
     skills: [],
     summary: "",
   });
+  const navigate = useNavigate()
 
-  // Steps array holds component references only (not JSX)
   const steps = [
     { name: "General info", component: GeneralInfo },
     { name: "Personal info", component: PersonalInfo },
@@ -58,7 +55,6 @@ function ResumeEditor() {
     "summary",
   ] as const;
 
-  // Render the component for the current step and pass data/setData props dynamically
   const renderStepContent = () => {
     const ActiveComponent =
       steps[activeStep].component as React.FC<StepProps<any>>;
@@ -161,8 +157,9 @@ function ResumeEditor() {
             Next
           </button>
         </div>
-        <div>
-          <button className="text-lg">Close</button>
+        <div className="flex gap-4">
+          <button onClick={() => navigate('/resume')} className="text-lg bg-black text-white p-2 cursor-pointer rounded-md">Close</button>
+          <button className="text-lg bg-black text-white p-2 cursor-pointer rounded-md">Save</button>
         </div>
       </div>
     </div>
